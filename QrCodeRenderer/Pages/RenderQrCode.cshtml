@@ -1,0 +1,68 @@
+﻿@page "~/renderqrcode/{content?}"
+@model QrCodeRenderer.Pages.RenderQrCodeModel
+@{
+    ViewData["Title"] = "QR Code rendering";
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        RenderQrCode.init();
+    });
+
+    RenderQrCode = {
+        self: this
+        , init: function() {
+            self.$textBase64 = document.getElementById('textBase64');
+            
+            self.$buttonCopyPaste = document.getElementById('buttonCopyPaste');
+            this.attachEvent();
+        }
+        , attachEvent: function() {
+            self.$buttonCopyPaste.addEventListener('click', function() {
+                RenderQrCode.copyToClipboard();
+            });
+        }, copyToClipboard: function() {
+            self.$textBase64.select();            
+            self.$textBase64.setSelectionRange(0, 99999);
+            let base64filtered = self.$textBase64.value.replace('data:image/png;base64,', '');
+
+            navigator.clipboard.writeText(base64filtered);
+            console.log(base64filtered);
+        }
+    }
+</script>
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="text-center">
+            <img
+                src=@Model.imageSource
+                class="rounded"
+                alt="QRCode"
+                width="300"
+                height="300">
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-sm-12 col-md-3 col-lg-2">
+        <button id="buttonCopyPaste" class="btn btn-outline-primary">Copy to Clipboard</button>
+    </div>
+    <div class="col-sm-12 col-md-9 col-lg-10">
+        <div style="overflow-x:scroll;">
+            <strong id="base64">@Model.imageSource</strong>
+            <div hidden>
+                <input id="textBase64" value="@Model.imageSource"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-12">
+        <a asp-page="GenerateQrCode" class="btn btn-primary">Back</a>
+    </div>
+</div>
