@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Primitives;
 using QrCodeRenderer.Services;
+using System.Runtime.Versioning;
 
 namespace QrCodeRenderer.Pages
 {
@@ -12,9 +14,15 @@ namespace QrCodeRenderer.Pages
 
         public string imageSource = string.Empty;
 
+        [SupportedOSPlatform("windows")]
         public void OnPost()
         {
-            imageSource = _qrCodeService.BitmapToImageSource(Request.Form["ContentQrCode"]);
+            StringValues content = Request.Form["ContentQrCode"];
+
+            if(content.Count == 0)
+                throw new Exception("Content not informed.");
+
+            imageSource = _qrCodeService.BitmapToImageSource(content);
         }
     }
 }

@@ -13,7 +13,7 @@
                     id="floatingInput"
                     asp-for="ContentQrCode"
                     class="form-control"
-                    placeholder="Type any value to QR code content"
+                    placeholder="@Model.ContentQrCode_InputPlaceholder"
                     value="Test"/>
                 <div class="input-group-append">
                     <button asp-page="RenderQrCode" class="btn btn-primary" type="submit">Get</button>
